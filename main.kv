@@ -1,0 +1,122 @@
+#:kivy 2.0
+#:import Mode data.Mode
+#:import Encryption_type data.Encryption_type
+#:import Data data.Data
+<CustomLabel@Label>:
+    canvas.before:
+        Color:
+            rgba: 0/255, 83/255, 83/255, 255/255
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<CustomButton@Button>:
+    background_color: 0/255, 100/255, 100/255, 255/255
+
+
+<ConverterScreen>:
+    name: "converter_screen"
+
+    BoxLayout:
+        orientation: "vertical"
+
+        CustomLabel: # Вывод информации
+            id: label_info
+            text: "Информация"
+            size_hint: 1, 0.45
+
+        BoxLayout:
+            orientation: "horizontal"
+
+            TextInput: # Ввод текста
+                id: textinput_text_input
+                hint_text: "Введите текст"
+                multiline: True
+                size_hint: 1, 1
+                text: ""
+
+            CustomButton:
+                id: button_paste
+                text: "paste"
+                size_hint: 0.25, 1
+                on_press: app.button_paste_press()
+
+        BoxLayout:
+            orientation: "horizontal"
+
+            TextInput: # Результат
+                id: textinput_text_output
+                hint_text: "Результат"
+                multiline: True
+                size_hint: 1, 1
+                readonly: True
+                cursor_blink: False
+
+            CustomButton:
+                id: button_copy
+                text: "copy"
+                size_hint: 0.25, 1
+                on_press: app.button_copy_press()
+
+        GridLayout:
+            size_hint: 1, 0.8
+            cols: 2
+            rows: 3
+            background_color: 0, 1, 1, 1
+            #spacing: 10
+            #padding: 20
+
+            CustomLabel:
+                id:label_key_input
+                text: "Ключ"
+                size_hint: 0.6, 0.6
+
+            TextInput: # Ввод ключа
+                id: textinput_key_input
+                hint_text: "Введите ключ"
+                multiline: False
+                size_hint: 1, 1
+
+            CustomLabel:
+                id:label_mode_input
+                text: "Режим"
+                size_hint: 0.6, 0.6
+
+            Spinner:
+                id: spinner_mode
+                text: Mode.ENCRYPTION.value
+                values: [Mode.ENCRYPTION.value, Mode.DECRYPTION.value]
+
+                size_hint: 1, 1
+                background_color: 0, 1, 1, 1
+
+            CustomLabel:
+                id:label_type_input
+                text: "Режим кодировки"
+                size_hint: 1, 1
+
+            Spinner:
+                id: spinner_encryption_type
+                text: Encryption_type.CAESAR.value # TODO изменить значение на значение по умолчанию
+                values: [Encryption_type.AUTORS.value, Encryption_type.CAESAR.value, Encryption_type.VIGENER.value]
+
+                size_hint: 1, 1
+                background_color: 0, 1, 1, 1
+
+        CustomButton:
+            id: button_convert
+            text: "Конвертировать"
+            on_press: app.press_button_convert()
+            size_hint: 1, 0.35
+
+
+<HistoryScreen>:
+    name: "history_screen"
+
+    BoxLayout:
+        orientation: "vertical"
+
+        CustomLabel: # Вывод информации
+            id: label_history
+            text: "История операций"
+            size_hint: 1, 0.45
