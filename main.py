@@ -1,11 +1,9 @@
-import configuration
 import json
 from kivy.core.clipboard import Clipboard
 from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
 from datetime import datetime
 
-from validator import Validator
+from core.services.validator import Validator
 from data import *
 from operation import *
 from converter import *
