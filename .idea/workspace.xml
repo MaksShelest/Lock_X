@@ -4,24 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61c76dcb-6222-4521-88cb-d59d2c1abbe4" name="Changes" comment="Initial commit">
-      <change afterPath="$PROJECT_DIR$/core/algorithms/algorithm_factory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/algorithms/authors.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/algorithms/caesar.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/algorithms/vigener.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/models/operation.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/models/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/resources/alphabet.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/storage/history_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/storage/settings_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/history.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/settings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/dialogs.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/widgets.py" afterDir="false" />
+    <list default="true" id="61c76dcb-6222-4521-88cb-d59d2c1abbe4" name="Changes" comment="fix: architecture">
+      <change afterPath="$PROJECT_DIR$/core/enums/algorithm_type.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/enums/operation_mode.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/enums/operation_status.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/configuration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/validator.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/services/validator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/algorithms/algorithm_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/algorithms/algorithm_factory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/algorithms/authors.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/algorithms/authors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/algorithms/caesar.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/algorithms/caesar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/algorithms/vigener.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/algorithms/vigener.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/resources/alphabet.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/resources/alphabet.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,10 +76,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\Python\Lock_X\core\enums" />
+      <recent name="D:\Projects\Python\Lock_X\core\algorithms" />
       <recent name="D:\Projects\Python\Lock_X\ui" />
       <recent name="D:\Projects\Python\Lock_X\core\resources" />
       <recent name="D:\Projects\Python\Lock_X\core\services" />
-      <recent name="D:\Projects\Python\Lock_X\core" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -119,7 +112,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785198826315</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fix: architecture">
+      <option name="closed" value="true" />
+      <created>1785433094216</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1785433094216</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -138,7 +139,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+    <MESSAGE value="fix: architecture" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: architecture" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Lock_X$main.coverage" NAME="main Coverage Results" MODIFIED="1785197829439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
