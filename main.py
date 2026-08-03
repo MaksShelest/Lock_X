@@ -2,6 +2,7 @@ import  ui.configuration
 from datetime import datetime
 
 from kivy.app import App
+from kivy.lang import Builder
 
 from core.algorithms.algorithm_factory import AlgorithmFactory
 from core.enums.algorithm_type import AlgorithmType
@@ -33,7 +34,7 @@ class LockXApp(App):
         Создание интерфейса приложения.
         Kivy загрузит main.kv.
         """
-        return super().build()
+        return Builder.load_file("main.kv")
 
     def encrypt_or_decrypt(self, text: str) -> str:
         """

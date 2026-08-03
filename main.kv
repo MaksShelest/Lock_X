@@ -1,122 +1,146 @@
-#:kivy 2.0
-#:import Mode data.Mode
-#:import Encryption_type data.Encryption_type
-#:import Data data.Data
+#:kivy 2.0.0
+
+
 <CustomLabel@Label>:
-    canvas.before:
-        Color:
-            rgba: 0/255, 83/255, 83/255, 255/255
-        Rectangle:
-            pos: self.pos
-            size: self.size
+    color: 1, 1, 1, 1
+    halign: "left"
+    valign: "middle"
+    text_size: self.size
+
 
 <CustomButton@Button>:
-    background_color: 0/255, 100/255, 100/255, 255/255
+    background_color: 0, 0.39, 0.39, 1
+    color: 1, 1, 1, 1
+    font_size: "16sp"
 
 
-<ConverterScreen>:
-    name: "converter_screen"
-
-    BoxLayout:
-        orientation: "vertical"
-
-        CustomLabel: # Вывод информации
-            id: label_info
-            text: "Информация"
-            size_hint: 1, 0.45
-
-        BoxLayout:
-            orientation: "horizontal"
-
-            TextInput: # Ввод текста
-                id: textinput_text_input
-                hint_text: "Введите текст"
-                multiline: True
-                size_hint: 1, 1
-                text: ""
-
-            CustomButton:
-                id: button_paste
-                text: "paste"
-                size_hint: 0.25, 1
-                on_press: app.button_paste_press()
-
-        BoxLayout:
-            orientation: "horizontal"
-
-            TextInput: # Результат
-                id: textinput_text_output
-                hint_text: "Результат"
-                multiline: True
-                size_hint: 1, 1
-                readonly: True
-                cursor_blink: False
-
-            CustomButton:
-                id: button_copy
-                text: "copy"
-                size_hint: 0.25, 1
-                on_press: app.button_copy_press()
-
-        GridLayout:
-            size_hint: 1, 0.8
-            cols: 2
-            rows: 3
-            background_color: 0, 1, 1, 1
-            #spacing: 10
-            #padding: 20
-
-            CustomLabel:
-                id:label_key_input
-                text: "Ключ"
-                size_hint: 0.6, 0.6
-
-            TextInput: # Ввод ключа
-                id: textinput_key_input
-                hint_text: "Введите ключ"
-                multiline: False
-                size_hint: 1, 1
-
-            CustomLabel:
-                id:label_mode_input
-                text: "Режим"
-                size_hint: 0.6, 0.6
-
-            Spinner:
-                id: spinner_mode
-                text: Mode.ENCRYPTION.value
-                values: [Mode.ENCRYPTION.value, Mode.DECRYPTION.value]
-
-                size_hint: 1, 1
-                background_color: 0, 1, 1, 1
-
-            CustomLabel:
-                id:label_type_input
-                text: "Режим кодировки"
-                size_hint: 1, 1
-
-            Spinner:
-                id: spinner_encryption_type
-                text: Encryption_type.CAESAR.value # TODO изменить значение на значение по умолчанию
-                values: [Encryption_type.AUTORS.value, Encryption_type.CAESAR.value, Encryption_type.VIGENER.value]
-
-                size_hint: 1, 1
-                background_color: 0, 1, 1, 1
-
-        CustomButton:
-            id: button_convert
-            text: "Конвертировать"
-            on_press: app.press_button_convert()
-            size_hint: 1, 0.35
+<ConverterScreen@BoxLayout>:
+    orientation: "vertical"
+    padding: dp(12)
+    spacing: dp(8)
 
 
-<HistoryScreen>:
-    name: "history_screen"
+    # ==============================
+    # Заголовок
+    # ==============================
 
-    BoxLayout:
-        orientation: "vertical"
+    Label:
+        text: "Lock_X"
+        size_hint_y: None
+        height: dp(45)
+        font_size: "26sp"
+        color: 1, 1, 1, 1
 
-        CustomLabel: # Вывод информации
-            id: label_history
-            text: "История операций"
-            size_hint: 1, 0.45
+        canvas.before:
+            Color:
+                rgba: 0, 0.39, 0.39, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+    # ==============================
+    # Исходный текст
+    # ==============================
+
+    Label:
+        text: "Исходное сообщение"
+        size_hint_y: None
+        height: dp(25)
+        font_size: "16sp"
+        color: 1, 1, 1, 1
+        halign: "left"
+        text_size: self.size
+
+
+    TextInput:
+        id: text_input
+        hint_text: "Введите текст..."
+        multiline: True
+        font_size: "16sp"
+        padding: dp(10), dp(10)
+
+
+    # ==============================
+    # Результат
+    # ==============================
+
+    Label:
+        text: "Результат"
+        size_hint_y: None
+        height: dp(25)
+        font_size: "16sp"
+        color: 1, 1, 1, 1
+        halign: "left"
+        text_size: self.size
+
+
+    TextInput:
+        id: text_output
+        hint_text: "Здесь появится результат..."
+        multiline: True
+        readonly: True
+        font_size: "16sp"
+        padding: dp(10), dp(10)
+
+
+    # ==============================
+    # Настройки
+    # ==============================
+
+    GridLayout:
+        cols: 2
+        size_hint_y: None
+        height: dp(120)
+        spacing: dp(8)
+
+        Label:
+            text: "Алгоритм:"
+            color: 1, 1, 1, 1
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+
+        Spinner:
+            id: algorithm_spinner
+            text: "Цезарь"
+            values: ["Цезарь", "Виженер", "Авторский"]
+            font_size: "16sp"
+
+        Label:
+            text: "Режим:"
+            color: 1, 1, 1, 1
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+
+        Spinner:
+            id: mode_spinner
+            text: "Шифрование"
+            values: ["Шифрование", "Расшифрование"]
+            font_size: "16sp"
+
+        Label:
+            text: "Ключ:"
+            color: 1, 1, 1, 1
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+
+        TextInput:
+            id: key_input
+            hint_text: "Введите ключ"
+            multiline: False
+            font_size: "16sp"
+
+
+    # ==============================
+    # Кнопка
+    # ==============================
+
+    CustomButton:
+        text: "Зашифровать / расшифровать"
+        size_hint_y: None
+        height: dp(50)
+
+ConverterScreen:
