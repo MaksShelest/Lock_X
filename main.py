@@ -1,14 +1,16 @@
-import  ui.configuration
+import ui.configuration
+
 from datetime import datetime
 
 from kivy.app import App
 from kivy.lang import Builder
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 
 from core.algorithms.algorithm_factory import AlgorithmFactory
 from core.enums.algorithm_type import AlgorithmType
 from core.enums.operation_mode import OperationMode
 from core.models.operation import Operation
-from core.models.settings import Settings
 from core.services.validator import Validator
 from core.storage.history_manager import HistoryManager
 from core.storage.settings_manager import SettingsManager
@@ -19,56 +21,190 @@ class LockXApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Менеджеры хранения данных
         self.settings_manager = SettingsManager()
         self.history_manager = HistoryManager()
 
-        # Загружаем сохранённые настройки
         self.settings = self.settings_manager.load()
-
-        # Загружаем историю операций
         self.history = self.history_manager.load()
 
     def build(self):
-        """
-        Создание интерфейса приложения.
-        Kivy загрузит main.kv.
-        """
         return Builder.load_file("main.kv")
 
-    def encrypt_or_decrypt(self, text: str) -> str:
+    def on_start(self):
         """
-        Шифрует или расшифровывает переданный текст
-        с использованием текущих настроек.
+        Вызывается после создания интерфейса.
+        Устанавливает в UI сохранённые настройки.
         """
 
-        # Проверяем исходный текст
+        self.root.ids.algorithm_spinner.text = (
+            self.get_algorithm_name(self.settings.algorithm)
+        )
+
+        self.root.ids.mode_spinner.text = (
+            self.get_mode_name(self.settings.mode)
+        )
+
+        self.root.ids.key_input.text = self.settings.key
+
+    # ==========================================================
+    # Преобразование Enum -> название в интерфейсе
+    # ==========================================================
+
+    @staticmethod
+    def get_algorithm_name(algorithm: AlgorithmType) -> str:
+        """Возвращает название алгоритма для интерфейса."""
+
+        names = {
+            AlgorithmType.CAESAR: "Цезарь",
+            AlgorithmType.VIGENER: "Виженер",
+            AlgorithmType.AUTHORS: "Авторский"
+        }
+
+        return names[algorithm]
+
+    @staticmethod
+    def get_mode_name(mode: OperationMode) -> str:
+        """Возвращает название режима для интерфейса."""
+
+        names = {
+            OperationMode.ENCRYPT: "Шифрование",
+            OperationMode.DECRYPT: "Расшифрование"
+        }
+
+        return names[mode]
+
+    # ==========================================================
+    # Преобразование названия из интерфейса -> Enum
+    # ==========================================================
+
+    @staticmethod
+    def get_algorithm_type(name: str) -> AlgorithmType:
+        """Преобразует название алгоритма в Enum."""
+
+        algorithms = {
+            "Цезарь": AlgorithmType.CAESAR,
+            "Виженер": AlgorithmType.VIGENER,
+            "Авторский": AlgorithmType.AUTHORS
+        }
+
+        return algorithms[name]
+
+    @staticmethod
+    def get_operation_mode(name: str) -> OperationMode:
+        """Преобразует название режима в Enum."""
+
+        modes = {
+            "Шифрование": OperationMode.ENCRYPT,
+            "Расшифрование": OperationMode.DECRYPT
+        }
+
+        return modes[name]
+
+    # ==========================================================
+    # Изменение настроек из UI
+    # ==========================================================
+
+    def on_algorithm_changed(self, value: str):
+        """Обрабатывает изменение алгоритма."""
+
+        algorithm = self.get_algorithm_type(value)
+
+        self.settings.algorithm = algorithm
+        self.settings_manager.save(self.settings)
+
+    def on_mode_changed(self, value: str):
+        """Обрабатывает изменение режима."""
+
+        mode = self.get_operation_mode(value)
+
+        self.settings.mode = mode
+        self.settings_manager.save(self.settings)
+
+    def on_key_changed(self, value: str):
+        """Обрабатывает изменение ключа."""
+
+        self.settings.key = value
+        self.settings_manager.save(self.settings)
+
+    # ==========================================================
+    # Основная операция
+    # ==========================================================
+
+    def encrypt_or_decrypt(self):
+        """
+        Шифрует или расшифровывает текст из интерфейса.
+        """
+
+        text = self.root.ids.text_input.text
+
+        # Синхронизируем настройки с UI
+        self.settings.algorithm = self.get_algorithm_type(
+            self.root.ids.algorithm_spinner.text
+        )
+
+        self.settings.mode = self.get_operation_mode(
+            self.root.ids.mode_spinner.text
+        )
+
+        self.settings.key = self.root.ids.key_input.text
+
+        # Сохраняем настройки
+        self.settings_manager.save(self.settings)
+
+        # Проверяем текст
         if not Validator.validate_text(text):
-            raise ValueError("Текст содержит недопустимые символы.")
+            self.show_error(
+                "Ошибка",
+                "Введите текст или используйте только "
+                "символы из поддерживаемого алфавита."
+            )
+            return
 
         # Проверяем ключ
         if not Validator.validate_key(
             self.settings.algorithm,
             self.settings.key
         ):
-            raise ValueError("Некорректный ключ.")
-
-        # Получаем нужный алгоритм
-        algorithm = AlgorithmFactory.create(
-            self.settings.algorithm
-        )
-
-        # Выполняем операцию
-        if self.settings.mode == OperationMode.ENCRYPT:
-            result = algorithm.encrypt(
-                text,
-                self.settings.key
+            self.show_error(
+                "Ошибка",
+                "Некорректный ключ для выбранного алгоритма."
             )
-        else:
-            result = algorithm.decrypt(
-                text,
-                self.settings.key
+            return
+
+        try:
+            # Получаем нужный алгоритм
+            algorithm = AlgorithmFactory.create(
+                self.settings.algorithm
             )
+
+            # Выполняем операцию
+            if self.settings.mode == OperationMode.ENCRYPT:
+                result = algorithm.encrypt(
+                    text,
+                    self.settings.key
+                )
+            else:
+                result = algorithm.decrypt(
+                    text,
+                    self.settings.key
+                )
+
+        except NotImplementedError:
+            self.show_error(
+                "Ошибка",
+                "Авторский алгоритм пока не реализован."
+            )
+            return
+
+        except Exception as error:
+            self.show_error(
+                "Ошибка",
+                str(error)
+            )
+            return
+
+        # Показываем результат
+        self.root.ids.text_output.text = result
 
         # Создаём запись истории
         operation = Operation(
@@ -80,52 +216,54 @@ class LockXApp(App):
             created_at=datetime.now()
         )
 
-        # Добавляем операцию в историю
+        # Сохраняем операцию
         self.history_manager.add(operation)
-
-        # Обновляем локальную историю
         self.history.append(operation)
 
-        return result
+    # ==========================================================
+    # История
+    # ==========================================================
 
-    def update_settings(
-        self,
-        algorithm: AlgorithmType | None = None,
-        mode: OperationMode | None = None,
-        key: str | None = None
-    ) -> None:
-        """
-        Изменяет настройки приложения и сохраняет их.
-        """
+    def clear_history(self):
+        """Очищает историю операций."""
 
-        if algorithm is not None:
-            self.settings.algorithm = algorithm
-
-        if mode is not None:
-            self.settings.mode = mode
-
-        if key is not None:
-            self.settings.key = key
-
-        self.settings_manager.save(self.settings)
-
-    def get_history(self) -> list[Operation]:
-        """
-        Возвращает историю операций.
-        """
-        return self.history
-
-    def clear_history(self) -> None:
-        """
-        Очищает историю операций.
-        """
         self.history_manager.clear()
         self.history.clear()
+
+    # ==========================================================
+    # Ошибки
+    # ==========================================================
+
+    @staticmethod
+    def show_error(title: str, message: str):
+        """Показывает пользователю сообщение об ошибке."""
+
+        content = Label(
+            text=message,
+            halign="center",
+            valign="middle"
+        )
+
+        content.bind(
+            size=lambda instance, value:
+            setattr(instance, "text_size", value)
+        )
+
+        popup = Popup(
+            title=title,
+            content=content,
+            size_hint=(0.8, 0.3)
+        )
+
+        popup.open()
+
+    def on_stop(self):
+        """
+        Сохраняем настройки перед закрытием приложения.
+        """
+
+        self.settings_manager.save(self.settings)
 
 
 if __name__ == "__main__":
     LockXApp().run()
-
-
-
-

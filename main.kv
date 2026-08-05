@@ -107,6 +107,9 @@
             values: ["Цезарь", "Виженер", "Авторский"]
             font_size: "16sp"
 
+            on_text: app.on_algorithm_changed(self.text)
+
+
         Label:
             text: "Режим:"
             color: 1, 1, 1, 1
@@ -119,6 +122,9 @@
             text: "Шифрование"
             values: ["Шифрование", "Расшифрование"]
             font_size: "16sp"
+
+            on_text: app.on_mode_changed(self.text)
+
 
         Label:
             text: "Ключ:"
@@ -133,6 +139,8 @@
             multiline: False
             font_size: "16sp"
 
+            on_text: app.on_key_changed(self.text)
+
 
     # ==============================
     # Кнопка
@@ -143,4 +151,8 @@
         size_hint_y: None
         height: dp(50)
 
+        on_release: app.encrypt_or_decrypt()
+
+
+# Корневой виджет приложения
 ConverterScreen:
